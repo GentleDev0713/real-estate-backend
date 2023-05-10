@@ -32,6 +32,8 @@ router.get("/user/:id", (req, res) => {
 });
 
 router.put("/user/:id/update", (req, res) => {
+  if (req.body.password) {
+  }
   req.body.password = CryptoJS.AES.encrypt(
     req.body.password,
     "secret key 123"
