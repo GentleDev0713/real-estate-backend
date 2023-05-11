@@ -5,7 +5,7 @@ const CurrencySchema = mongoose.Schema(
     name: { type: String, require: true },
     symbol: {
       type: String,
-      require: "true",
+      require: true,
     },
     code: { type: String, require: true },
     created: {

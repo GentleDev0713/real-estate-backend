@@ -5,7 +5,7 @@ const FeatureSchema = mongoose.Schema(
     name: { type: String, require: true },
     icon: {
       type: String,
-      require: "true",
+      require: true,
     },
     created: {
       type: Date,
