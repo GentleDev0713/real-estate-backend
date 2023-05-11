@@ -18,7 +18,7 @@ const MONGODB_URI =
 
 // middleware
 const corsOptions = {
-  origin: "http://localhost:3000", // frontend URI (ReactJS)
+  origin: "https://real-estate-frontend-uevy.onrender.com", // frontend URI (ReactJS)
 };
 app.use(express.json());
 app.use(cors(corsOptions));
@@ -50,7 +50,7 @@ const server = app.listen(PORT, () => {
 });
 // app.use(
 //   cors({
-//     origin: "http://localhost:3003",
+//     origin: " https://real-estate-frontend-uevy.onrender.com",
 //   })
 // );
 
