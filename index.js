@@ -19,8 +19,9 @@ const MONGODB_URI =
 // middleware
 const corsOptions = {
   origin: "https://real-estate-frontend-uevy.onrender.com", // frontend URI (ReactJS)
+  // origin: "http://localhost:3003",
 };
-app.use(express.json());
+// app.use(express.json());
 app.use(cors(corsOptions));
 
 mongoose
