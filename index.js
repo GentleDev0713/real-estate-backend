@@ -34,7 +34,6 @@ app.use(
 
 app.use(express.static(__dirname));
 app.use(express.json());
-app.use(cors());
 
 app.use("/", router);
 
@@ -43,7 +42,7 @@ const server = app.listen(PORT, () => {
 });
 app.use(
   cors({
-    origin: "https://real-estate-frontend-uevy.onrender.com",
+    origin: "https://real-estate-backend-9ph8.onrender.com",
   })
 );
 
