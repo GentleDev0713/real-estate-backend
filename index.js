@@ -16,14 +16,6 @@ const PORT = process.env.PORT || 3003;
 const MONGODB_URI =
   process.env.MONGODB_URI || "mongodb://127.0.0.1/buyhomeforless";
 
-// middleware
-const corsOptions = {
-  origin: "https://real-estate-frontend-uevy.onrender.com", // frontend URI (ReactJS)
-  // origin: "http://localhost:3003",
-};
-// app.use(express.json());
-app.use(cors(corsOptions));
-
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true })
   .then(() => {
@@ -49,13 +41,13 @@ app.use("/", router);
 const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-// app.use(
-//   cors({
-//     origin: " https://real-estate-frontend-uevy.onrender.com",
-//   })
-// );
+app.use(
+  cors({
+    origin: "https://real-estate-frontend-uevy.onrender.com",
+  })
+);
 
-// app.use(cors());
+app.use(cors());
 
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
