@@ -42,7 +42,7 @@ const server = app.listen(PORT, () => {
 });
 app.use(
   cors({
-    origin: "https://real-estate-backend-9ph8.onrender.com",
+    origin: "https://real-estate-frontend-uevy.onrender.com",
   })
 );
 
