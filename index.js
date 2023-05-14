@@ -17,11 +17,13 @@ const MONGODB_URI =
   process.env.MONGODB_URI || "mongodb://127.0.0.1/buyhomeforless";
 
 // middleware
-const corsOptions = {
-  origin: "https://real-estate-frontend-uevy.onrender.com", // frontend URI (ReactJS)
-  // origin: "http://localhot:3000",
-};
 app.use(express.json());
+const corsOptions = {
+  origin: [
+    "http://localhost:3000",
+    "https://real-estate-frontend-uevy.onrender.com",
+  ], // frontend URI (ReactJS)
+};
 app.use(cors(corsOptions));
 
 mongoose
