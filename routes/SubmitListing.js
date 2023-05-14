@@ -1,6 +1,3 @@
-// const router = require("express").Router();
-// const SubmitListing = require("../models/SubmitListings");
-
 const router = require("express").Router();
 const SubmitListing = require("../Modelss/SubmitListings");
 
