@@ -2,8 +2,21 @@ const asyncHandler = require("express-async-handler");
 const generateToken = require("../config/generateToken");
 const Auth = require("../Modelss/userModel");
 var CryptoJS = require("crypto-js");
+const multer = require("multer");
 
-const registerUser = asyncHandler(async (req, res) => {
+const storage = multer.diskStorage({
+  destination: "./uploads/users",
+  filename: (req, file, callBack) => {
+    const fileName = Date.now() + file.originalname;
+    req.body.pric = "uploads/users/" + fileName;
+
+    callBack(null, fileName);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+const registerUser = asyncHandler(upload.single(file), async (req, res) => {
   const { name, email, password, pic, user } = req.body;
 
   if (!name || !email || !password) {
