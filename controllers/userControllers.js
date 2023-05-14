@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const registerUser = asyncHandler(upload.single(req.pic), async (req, res) => {
+const registerUser = asyncHandler(upload.single("user"), async (req, res) => {
   const { name, email, password, pic, user } = req.body;
 
   if (!name || !email || !password) {
