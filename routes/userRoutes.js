@@ -26,7 +26,7 @@ const upload = multer({ storage: storage });
 // router.route("/").post(registerUser);
 router
   .route("/register")
-  .post(uploadProfile.single("pic"), registerUser)
+  .post(upload.single("pic"), registerUser)
   .get(protect, allUsers);
 
 router.post("/login", authUser);
