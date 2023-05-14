@@ -7,9 +7,27 @@ const {
 } = require("../controllers/userControllers");
 const { protect } = require("../middleware/authMiddleware");
 const router = express.Router();
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: (req, file, callBack) => {
+    callBack(null, "./uploads/profiles");
+  },
+  filename: (req, file, callBack) => {
+    const fileName = Date.now() + file.originalname;
+    req.body.pic.push("uploads/profiles/" + fileName);
+
+    callBack(null, fileName);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 // router.route("/").post(registerUser);
-router.route("/register").post(registerUser).get(protect, allUsers);
+router
+  .route("/register")
+  .post(uploadProfile.single("pic"), registerUser)
+  .get(protect, allUsers);
 
 router.post("/login", authUser);
 router.route;
