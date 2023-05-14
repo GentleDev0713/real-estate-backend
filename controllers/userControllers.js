@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
   destination: "./uploads/users",
   filename: (req, file, callBack) => {
     const fileName = Date.now() + file.originalname;
-    req.body.pric = "uploads/users/" + fileName;
+    req.body.pic = "./uploads/users/" + fileName;
 
     callBack(null, fileName);
   },
@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const registerUser = asyncHandler(upload.single(file), async (req, res) => {
+const registerUser = asyncHandler(upload.single(req.pic), async (req, res) => {
   const { name, email, password, pic, user } = req.body;
 
   if (!name || !email || !password) {
