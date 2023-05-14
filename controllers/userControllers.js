@@ -6,7 +6,7 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: (req, file, callBack) => {
-    callBack(null, "./uploads/thumbnail");
+    callBack(null, "./uploads/profiles");
   },
   filename: (req, file, callBack) => {
     const fileName = Date.now() + file.originalname;
@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 const uploadProfile = multer({ storage: storage });
 
 const registerUser = asyncHandler(
-  uploadProfile.single("pic"),
+  // uploadProfile.single("pic"),
   async (req, res) => {
     console.log(req.body, req.file);
     const { name, email, password, pic, user } = req.body;
