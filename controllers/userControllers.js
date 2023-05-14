@@ -5,10 +5,10 @@ var CryptoJS = require("crypto-js");
 const multer = require("multer");
 
 const storage = multer.diskStorage({
-  destination: "./uploads/users",
+  destination: "./uploads",
   filename: (req, file, callBack) => {
     const fileName = Date.now() + file.originalname;
-    req.body.pic = "./uploads/users/" + fileName;
+    req.body.pic = "./uploads/" + fileName;
 
     callBack(null, fileName);
   },
@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const registerUser = asyncHandler(upload.single("user"), async (req, res) => {
+const registerUser = asyncHandler(upload.single("users"), async (req, res) => {
   const { name, email, password, pic, user } = req.body;
 
   if (!name || !email || !password) {
