@@ -21,7 +21,7 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     "http://localhost:3000",
-    "https://real-estate-frontend-uevy.onrender.com",
+    "https://real-estate-frontend-u4cg.onrender.com",
   ], // frontend URI (ReactJS)
 };
 app.use(cors(corsOptions));
@@ -53,7 +53,7 @@ const server = app.listen(PORT, () => {
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "https://real-estate-frontend-uevy.onrender.com",
+    origin: "https://real-estate-frontend-u4cg.onrender.com",
   },
 });
 
