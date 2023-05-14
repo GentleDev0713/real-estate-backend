@@ -48,13 +48,13 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const authUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, isAdmin } = req.body;
 
   const user = await Auth.findOne({ email });
   if (user) {
     const bytes = CryptoJS.AES.decrypt(user.password, "secret key 123");
     const originalPassword = bytes.toString(CryptoJS.enc.Utf8);
-    if (originalPassword == password) {
+    if (originalPassword == password && isAdmin == user.isAdmin) {
       res.json({
         _id: user._id,
         name: user.name,
