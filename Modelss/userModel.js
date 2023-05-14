@@ -7,6 +7,7 @@ const userSchema = mongoose.Schema(
     password: { type: String, required: true },
     pic: {
       type: String,
+      default: "uploads/profiles/profile.png",
     },
     user: { type: String },
     isAdmin: { type: Boolean, default: false },
