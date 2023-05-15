@@ -10,6 +10,7 @@ var mailTransport = () =>
   nodemailer.createTransport({
     host: "sandbox.smtp.mailtrap.io",
     port: 2525,
+    secure: false,
     auth: {
       user: "50edd658715806",
       pass: "1a254a5bf1934b",
@@ -92,12 +93,12 @@ const registerUser = asyncHandler(async (req, res) => {
   await userVerify.save();
   await newAuth.save();
 
-  // mailTransport().sendMail({
-  //   from: '"Example Team"<from@example.com>',
-  //   to: newAuth.email,
-  //   subject: "Verify you remail account",
-  //   html: generateEmailTemplate(OTP),
-  // });
+  mailTransport().sendMail({
+    from: "29b74381ea-28e27b@inbox.mailtrap.io",
+    to: newAuth.email,
+    subject: "Verify you remail account",
+    html: generateEmailTemplate(OTP),
+  });
 
   res.json({
     success: true,
