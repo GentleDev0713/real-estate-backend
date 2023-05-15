@@ -9,8 +9,7 @@ const SubmitSchema = new mongoose.Schema({
     price: { type: String },
     period: { type: String },
     space: { type: String },
-    // land: { type: String },
-    // building: { type: String },
+    currency: { type: String },
     video: { type: String },
   },
   Gallery: {
@@ -24,26 +23,29 @@ const SubmitSchema = new mongoose.Schema({
     region: { type: String },
   },
   Features: {
-    pet: { type: Boolean },
-    furnished: { type: Boolean },
-    cooling: { type: Boolean },
-    parking: { type: Boolean },
-    mail: { type: Boolean },
-    city: { type: Boolean },
+    type: Array,
   },
   Details: {
     id: { type: String },
-    beds: { type: String },
-    bathrooms: { type: String },
+    beds: { type: Number },
+    bathrooms: { type: Number },
     condition: { type: String },
     built: { type: String },
     neighbor: { type: String },
+    living: { type: Boolean },
+    dining: { type: Boolean },
+    story: { type: Number },
+    parking: { type: String },
   },
+  category: { type: String },
+  // buy: { type: Boolean },
   Author: {
     authorname: { type: String },
     email: { type: String },
     authorId: { type: String },
   },
+},{
+  timestamps: true
 });
 
 module.exports =

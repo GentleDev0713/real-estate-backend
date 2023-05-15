@@ -12,7 +12,6 @@ router.get("/get-properties", (req, res) => {
     });
   } catch (error) {
     res.status(500).json(error);
-    console.log(error);
   }
 });
 
@@ -31,31 +30,102 @@ router.get("/get-properties", (req, res) => {
 //   }
 // });
 
-// router.get("/category/:id", (req, res) => {
-//   try {
-//     Category.findById(req.params.id).then((response) => {
-//       res.status(200).json({
-//         success: true,
-//         result: response,
-//       });
-//     });
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// });
+router.get("/property/:id", (req, res) => {
+  try {
+    Property.findById(req.params.id).then((response) => {
+      res.status(200).json({
+        success: true,
+        result: response,
+      });
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
-// router.put("/category/:id/update", (req, res) => {
-//   try {
-//     Category.findByIdAndUpdate(req.params.id, req.body).then((response) => {
-//       res.status(200).json({
-//         success: true,
-//         result: response,
-//       });
-//     });
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// });
+router.put("/property/:id/update", (req, res) => {
+  try {
+    const {
+      description,
+      name,
+      status,
+      price,
+      period,
+      type,
+      currency,
+      space,
+      video,
+      thumbnail,
+      picture,
+      lat,
+      long,
+      address,
+      region,
+      features,
+      id,
+      beds,
+      bathrooms,
+      condition,
+      built,
+      neighbor,
+      living,
+      dining,
+      story,
+      parking,
+      category,
+      authorname,
+      email,
+      authorId,
+    } = req.body;
+
+    const listing = {
+      BasicInformation: {
+        description: description,
+        name: name,
+        status: status,
+        price: price,
+        currency: currency,
+        period: period,
+        type: type,
+        space: space,
+        video: video,
+      },
+      Location: {
+        latitude: lat,
+        longitude: long,
+        address: address,
+        region: region,
+      },
+      // Features: features,
+      Details: {
+        id: id,
+        beds: beds,
+        bathrooms: bathrooms,
+        condition: condition,
+        built: built,
+        neighbor: neighbor,
+        living: living,
+        dining: dining,
+        story: story,
+        parking: parking,
+      },
+      category: category,
+      Author: {
+        authorname: authorname,
+        email: email,
+        authorId: authorId,
+      },
+    };
+    Property.findByIdAndUpdate(req.params.id, listing).then((response) => {
+      res.status(200).json({
+        success: true,
+        result: response,
+      });
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
 router.delete("/delete/property/:id", (req, res) => {
   Property.findByIdAndDelete(req.params.id, (err) => {

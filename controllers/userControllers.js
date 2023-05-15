@@ -1,11 +1,55 @@
 const asyncHandler = require("express-async-handler");
 const generateToken = require("../config/generateToken");
-const Auth = require("../Modelss/userModel");
 var CryptoJS = require("crypto-js");
+const otpGenerator = require("otp-generator");
+const nodemailer = require("nodemailer");
+const Auth = require("../Modelss/userModel");
+const UserVerify = require("../Modelss/UserVerify");
+
+var mailTransport = () =>
+  nodemailer.createTransport({
+    host: "sandbox.smtp.mailtrap.io",
+    port: 2525,
+    auth: {
+      user: "50edd658715806",
+      pass: "1a254a5bf1934b",
+    },
+  });
+
+const generateEmailTemplate = (code) => {
+  return `
+   <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+      <style>
+      @media only screen and (max-width: 620px) {
+        h1 {
+          font-size: 20px;
+          padding: 5px;
+        }
+      }
+      </style>
+  </head>
+  <body>
+      <div>
+      <div style="max-width: 620px; margin: 0 auto; font-family: sans-serif; color: #272727;">
+      <h1 style="background: #f6f6f6; padding: 10px; text-align: center; color: #272727">We are delighted to welcome you to our team!</h1>
+      <p>Please Verify Your Email To Continue Your Verification code is:</p>
+      <p style="width: 80px; margin: 0 auto; font-weight: bold; text-align: center; background: #f6f6f6; border-radius: 5px;
+      font-size: 25px;">${code}</p>
+      </div>
+      </div>
+  </body>
+  </html>
+      `;
+};
 
 const registerUser = asyncHandler(async (req, res) => {
-  console.log(req.body, req.file);
-  const { name, email, password, pic, user } = req.body;
+  const { name, email, password, user } = req.body;
 
   if (!name || !email || !password) {
     res.status(400).json({
@@ -21,36 +65,88 @@ const registerUser = asyncHandler(async (req, res) => {
     });
   }
 
-  const newAuth = await Auth.create({
+  let pic = req.body.pic;
+  if (pic === "undefined" || pic === "") {
+    pic = "uploads/profiles/profile.png";
+  }
+
+  const newAuth = new Auth({
     name,
     email,
-    // password: password,
     password: CryptoJS.AES.encrypt(password, "secret key 123").toString(),
     pic,
     user,
   });
-  if (newAuth) {
-    res.status(201).json({
-      _id: newAuth._id,
+
+  let OTP = await otpGenerator.generate(6, {
+    lowerCaseAlphabets: false,
+    upperCaseAlphabets: false,
+    specialChars: false,
+  });
+
+  const userVerify = new UserVerify({
+    owner: newAuth._id,
+    code: OTP,
+  });
+
+  await userVerify.save();
+  await newAuth.save();
+
+  // mailTransport().sendMail({
+  //   from: '"Example Team"<from@example.com>',
+  //   to: newAuth.email,
+  //   subject: "Verify you remail account",
+  //   html: generateEmailTemplate(OTP),
+  // });
+
+  res.json({
+    success: true,
+    user: {
       name: newAuth.name,
-      password: newAuth.password,
       email: newAuth.email,
-      pic: newAuth.pic,
-      user: newAuth.user,
-      isAdmin: newAuth.isAdmin,
-      token: generateToken(newAuth._id),
-      Msg: "register",
+      id: newAuth._id,
+      verified: newAuth.verified,
+    },
+  });
+});
+
+const registerVerify = asyncHandler(async (req, res) => {
+  console.log(req.body);
+  const { code } = req.body;
+
+  if (!code) {
+    res.status(400).json({
+      Msg: "Please Fil Out Code Field",
+    });
+  }
+
+  const verify = await UserVerify.findOne({ owner: req.params.id, code: code });
+
+  if (verify) {
+    await Auth.findByIdAndUpdate(req.params.id, { verified: true });
+    await Auth.findById(req.params.id).then((user) => {
+      res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        password: user.password,
+        email: user.email,
+        pic: user.pic,
+        user: user.user,
+        isAdmin: user.isAdmin,
+        verified: user.verified,
+        token: generateToken(res._id),
+        Msg: "register",
+      });
     });
   } else {
-    res.status(400);
-    throw new Error("Failed to Create User");
+    res.status(400).json({ Msg: "Wrong Verification Code" });
   }
 });
 
 const authUser = asyncHandler(async (req, res) => {
   const { email, password, isAdmin } = req.body;
 
-  const user = await Auth.findOne({ email });
+  const user = await Auth.findOne({ email, isAdmin });
   if (user) {
     const bytes = CryptoJS.AES.decrypt(user.password, "secret key 123");
     const originalPassword = bytes.toString(CryptoJS.enc.Utf8);
@@ -92,4 +188,10 @@ const allUsers = asyncHandler(async (req, res) => {
   });
   res.send(users);
 });
-module.exports = { registerUser, authUser, allUsers };
+
+module.exports = {
+  registerUser,
+  authUser,
+  allUsers,
+  registerVerify,
+};

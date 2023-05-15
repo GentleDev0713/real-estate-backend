@@ -2,6 +2,7 @@ const express = require("express");
 const Auth = require("../Modelss/userModel");
 const {
   registerUser,
+  registerVerify,
   authUser,
   allUsers,
 } = require("../controllers/userControllers");
@@ -9,15 +10,15 @@ const { protect } = require("../middleware/authMiddleware");
 const router = express.Router();
 const multer = require("multer");
 
-const storage = multer.diskStorage({
-  destination: (req, file, callBack) => {
-    callBack(null, "./uploads/profiles");
+let storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads/profiles");
   },
-  filename: (req, file, callBack) => {
+  filename: (req, file, cb) => {
     const fileName = Date.now() + file.originalname;
-    req.body.pic.push("uploads/profiles/" + fileName);
+    req.body.pic = "uploads/profiles/" + fileName;
 
-    callBack(null, fileName);
+    cb(null, fileName);
   },
 });
 
@@ -28,6 +29,8 @@ router
   .route("/register")
   .post(upload.single("pic"), registerUser)
   .get(protect, allUsers);
+
+router.post("/register-verify/(:id)", registerVerify);
 
 router.post("/login", authUser);
 router.route;
