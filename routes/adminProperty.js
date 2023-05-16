@@ -76,6 +76,7 @@ router.put("/property/:id/update", (req, res) => {
       authorname,
       email,
       authorId,
+      pic,
     } = req.body;
 
     const listing = {
@@ -114,6 +115,7 @@ router.put("/property/:id/update", (req, res) => {
         authorname: authorname,
         email: email,
         authorId: authorId,
+        pic: pic,
       },
     };
     Property.findByIdAndUpdate(req.params.id, listing).then((response) => {

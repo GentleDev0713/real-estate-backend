@@ -59,11 +59,8 @@ router.post(
       story,
       parking,
       category,
-      authorname,
-      email,
       authorId,
     } = req.body;
-
     const newListing = new SubmitListing({
       BasicInformation: {
         description: description,
@@ -86,7 +83,7 @@ router.post(
         address: address,
         region: region,
       },
-      Features: features,
+      Features: features.split(","),
       Details: {
         id: id,
         beds: beds,
@@ -100,13 +97,8 @@ router.post(
         parking: parking,
       },
       category: category,
-      Author: {
-        authorname: authorname,
-        email: email,
-        authorId: authorId,
-      },
+      Author: authorId,
     });
-    // console.log(newListing);
     try {
       newListing.save().then((response) => {
         res.status(200).json({
@@ -123,12 +115,14 @@ router.post(
 
 router.get("/submit", async (req, res) => {
   try {
-    SubmitListing.find({}).then((response) => {
-      res.status(200).json({
-        success: true,
-        result: response,
+    SubmitListing.find({})
+      .populate(["Author", "Features"])
+      .then((response) => {
+        res.status(200).json({
+          success: true,
+          result: response,
+        });
       });
-    });
   } catch (error) {
     res.status(500).json(error);
     console.log(error);
@@ -149,6 +143,21 @@ router.delete("/submit/(:id)", (req, res) => {
       console.log("Failed to Delete user Details: " + err);
     }
   });
+});
+
+router.get("/submit/:id", (req, res) => {
+  try {
+    SubmitListing.findById(req.params.id)
+      // .populate("features")
+      .then((response) => {
+        res.status(200).json({
+          success: true,
+          result: response,
+        });
+      });
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 module.exports = router;
