@@ -129,6 +129,22 @@ router.get("/submit", async (req, res) => {
   }
 });
 
+router.get("/get-properties", async (req, res) => {
+  try {
+    SubmitListing.find({})
+      .populate(["Author"])
+      .then((response) => {
+        res.status(200).json({
+          success: true,
+          result: response,
+        });
+      });
+  } catch (error) {
+    res.status(500).json(error);
+    console.log(error);
+  }
+});
+
 router.delete("/submit/(:id)", (req, res) => {
   SubmitListing.findByIdAndRemove(req.params.id, (err) => {
     if (!err) {
