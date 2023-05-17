@@ -43,9 +43,6 @@ app.use(
 );
 
 // app.use(express.static(__dirname));
-
-app.use("/", router);
-
 app.get("/*", function (req, res) {
   res.sendFile(path.join(__dirname, "build/index.html"), function (err) {
     if (err) {
@@ -53,6 +50,8 @@ app.get("/*", function (req, res) {
     }
   });
 });
+
+app.use("/", router);
 
 const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
