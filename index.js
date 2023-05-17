@@ -7,6 +7,7 @@ const router = require("./routes");
 const cors = require("cors");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
+// const path = require("path");
 
 const app = express();
 
@@ -42,14 +43,14 @@ app.use(
   })
 );
 
-// app.use(express.static(__dirname));
-app.get("/*", function (req, res) {
-  res.sendFile(path.join(__dirname, "build/index.html"), function (err) {
-    if (err) {
-      res.status(500).send(err);
-    }
-  });
-});
+app.use(express.static(__dirname));
+// app.get("/*", function (req, res) {
+//   res.sendFile(path.join(__dirname, "build/index.html"), function (err) {
+//     if (err) {
+//       res.status(500).send(err);
+//     }
+//   });
+// });
 
 app.use("/", router);
 
