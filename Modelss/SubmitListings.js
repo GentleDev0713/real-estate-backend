@@ -22,7 +22,14 @@ const SubmitSchema = new mongoose.Schema(
       latitude: { type: String },
       longitude: { type: String },
       address: { type: String },
-      region: { type: String },
+      country: { type: String },
+      city: { type: String },
+      provice: {
+        type: String,
+      },
+      zipcode: {
+        type: String,
+      },
     },
     Features: [
       {
@@ -43,6 +50,23 @@ const SubmitSchema = new mongoose.Schema(
       parking: { type: String },
       lotsize: { type: String },
       view: { type: String },
+      near: [
+        {
+          type: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "neartypes",
+          },
+          name: {
+            type: String,
+          },
+          distance: {
+            type: String,
+          },
+          isEdit: {
+            type: Boolean,
+          },
+        },
+      ],
     },
     category: { type: String },
     Author: {
