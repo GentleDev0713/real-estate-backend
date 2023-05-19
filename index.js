@@ -11,7 +11,7 @@ const morgan = require("morgan");
 
 const app = express();
 
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 
 mongoose.set("strictQuery", false);
 
