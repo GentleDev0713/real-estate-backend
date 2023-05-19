@@ -54,6 +54,7 @@ router.put("/property/:id/update", (req, res) => {
       type,
       currency,
       space,
+      land,
       video,
       thumbnail,
       picture,
@@ -72,11 +73,10 @@ router.put("/property/:id/update", (req, res) => {
       dining,
       story,
       parking,
+      lotsize,
+      view,
       category,
-      authorname,
-      email,
-      authorId,
-      pic,
+      author,
     } = req.body;
 
     const listing = {
@@ -89,6 +89,7 @@ router.put("/property/:id/update", (req, res) => {
         period: period,
         type: type,
         space: space,
+        land: land,
         video: video,
       },
       Location: {
@@ -109,14 +110,11 @@ router.put("/property/:id/update", (req, res) => {
         dining: dining,
         story: story,
         parking: parking,
+        lotsize: lotsize,
+        view: view,
       },
       category: category,
-      Author: {
-        authorname: authorname,
-        email: email,
-        authorId: authorId,
-        pic: pic,
-      },
+      Author: author,
     };
     Property.findByIdAndUpdate(req.params.id, listing).then((response) => {
       res.status(200).json({

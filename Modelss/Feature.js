@@ -2,14 +2,10 @@ const mongoose = require("mongoose");
 
 const FeatureSchema = mongoose.Schema(
   {
-    name: { type: String, require: true },
+    name: { type: String, required: true },
     icon: {
       type: String,
-      require: true,
-    },
-    created: {
-      type: Date,
-      default: Date.now,
+      default: "uploads/features/default.ico",
     },
   },
   {

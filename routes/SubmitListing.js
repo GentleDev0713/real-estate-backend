@@ -40,6 +40,7 @@ router.post(
       type,
       currency,
       space,
+      land,
       video,
       thumbnail,
       picture,
@@ -58,6 +59,8 @@ router.post(
       dining,
       story,
       parking,
+      lotsize,
+      view,
       category,
       authorId,
     } = req.body;
@@ -71,6 +74,7 @@ router.post(
         period: period,
         type: type,
         space: space,
+        land: land,
         video: video,
       },
       Gallery: {
@@ -83,7 +87,7 @@ router.post(
         address: address,
         region: region,
       },
-      Features: features.split(","),
+      Features: features ? features.split(",") : [],
       Details: {
         id: id,
         beds: beds,
@@ -95,6 +99,8 @@ router.post(
         dining: dining,
         story: story,
         parking: parking,
+        lotsize: lotsize,
+        view: view,
       },
       category: category,
       Author: authorId,
@@ -116,6 +122,24 @@ router.post(
 router.get("/submit", async (req, res) => {
   try {
     SubmitListing.find({})
+      .populate(["Author", "Features"])
+      .then((response) => {
+        res.status(200).json({
+          success: true,
+          result: response,
+        });
+      });
+  } catch (error) {
+    res.status(500).json(error);
+    console.log(error);
+  }
+});
+
+router.get("/lastsubmit", async (req, res) => {
+  try {
+    SubmitListing.find({})
+      .sort({ createdAt: -1 })
+      .limit(4)
       .populate(["Author", "Features"])
       .then((response) => {
         res.status(200).json({
@@ -164,7 +188,7 @@ router.delete("/submit/(:id)", (req, res) => {
 router.get("/submit/:id", (req, res) => {
   try {
     SubmitListing.findById(req.params.id)
-      // .populate("features")
+      .populate(["Author"])
       .then((response) => {
         res.status(200).json({
           success: true,

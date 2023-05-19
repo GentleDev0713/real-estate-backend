@@ -1,6 +1,21 @@
 const express = require("express");
 const Feature = require("../Modelss/Feature");
 const router = express.Router();
+const multer = require("multer");
+
+let iconstorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads/features");
+  },
+  filename: (req, file, cb) => {
+    const fileName = Date.now() + file.originalname;
+    req.body.icon = "uploads/features/" + fileName;
+
+    cb(null, fileName);
+  },
+});
+
+const uploadIcon = multer({ storage: iconstorage });
 
 router.get("/get-features", (req, res) => {
   try {
@@ -15,8 +30,15 @@ router.get("/get-features", (req, res) => {
   }
 });
 
-router.post("/feature/create", async (req, res) => {
-  const feature = await new Feature(req.body);
+router.post("/feature/create", uploadIcon.single("icon"), async (req, res) => {
+  let icon = req.body.icon;
+  if (icon === "undefined" || icon === "" || icon === {}) {
+    icon = "uploads/features/default.ico";
+  }
+  const feature = await new Feature({
+    name: req.body.name,
+    icon: icon,
+  });
   try {
     feature.save().then((response) => {
       res.json({
@@ -43,9 +65,15 @@ router.get("/feature/:id", (req, res) => {
   }
 });
 
-router.put("/feature/:id/update", (req, res) => {
+router.put("/feature/:id/update", uploadIcon.single("icon"), (req, res) => {
   try {
-    Feature.findByIdAndUpdate(req.params.id, req.body).then((response) => {
+    var feature = {
+      name: req.body.name,
+    };
+    if (req.body.icon && req.body.icon !== "undefined") {
+      feature.icon = req.body.icon;
+    }
+    Feature.findByIdAndUpdate(req.params.id, feature).then((response) => {
       res.status(200).json({
         success: true,
         result: response,

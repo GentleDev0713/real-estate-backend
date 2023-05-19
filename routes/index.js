@@ -10,6 +10,7 @@ const adminCategory = require("./adminCategory");
 const adminProperty = require("./adminProperty");
 const adminCurrency = require("./adminCurrency");
 const adminFeature = require("./adminFeature");
+const adminLocation = require("./adminLocation");
 const getListing = require("./getListing");
 
 router.use("/submitlisting", submitListingRouter);
@@ -21,6 +22,7 @@ router.use("/admin", adminCategory);
 router.use("/admin", adminProperty);
 router.use("/admin", adminCurrency);
 router.use("/admin", adminFeature);
+router.use("/admin", adminLocation);
 router.use("/", getListing);
 
 module.exports = router;

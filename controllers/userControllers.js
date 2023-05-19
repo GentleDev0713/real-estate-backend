@@ -5,6 +5,7 @@ const otpGenerator = require("otp-generator");
 const nodemailer = require("nodemailer");
 const Auth = require("../Modelss/userModel");
 const UserVerify = require("../Modelss/UserVerify");
+const { fast2sms } = require("./../utils/otp.util");
 
 var mailTransport = () =>
   nodemailer.createTransport({
@@ -90,29 +91,39 @@ const registerUser = asyncHandler(async (req, res) => {
     code: OTP,
   });
 
-  await userVerify.save();
-  await newAuth.save();
+  try {
+    await userVerify.save();
+    await newAuth.save();
 
-  mailTransport().sendMail({
-    from: "29b74381ea-28e27b@inbox.mailtrap.io",
-    to: newAuth.email,
-    subject: "Verify you remail account",
-    html: generateEmailTemplate(OTP),
-  });
+    if (email.indexOf("@") === -1) {
+      await fast2sms({
+        message: `Your OTP is ${OTP}`,
+        contactNumber: user.email,
+      });
+    } else {
+      mailTransport().sendMail({
+        from: "29b74381ea-28e27b@inbox.mailtrap.io",
+        to: newAuth.email,
+        subject: "Verify you remail account",
+        html: generateEmailTemplate(OTP),
+      });
+    }
 
-  res.json({
-    success: true,
-    user: {
-      name: newAuth.name,
-      email: newAuth.email,
-      id: newAuth._id,
-      verified: newAuth.verified,
-    },
-  });
+    res.json({
+      success: true,
+      user: {
+        name: newAuth.name,
+        email: newAuth.email,
+        id: newAuth._id,
+        verified: newAuth.verified,
+      },
+    });
+  } catch (err) {
+    res.status(404).json(err);
+  }
 });
 
 const registerVerify = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const { code } = req.body;
 
   if (!code) {

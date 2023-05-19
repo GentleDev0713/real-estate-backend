@@ -1,6 +1,31 @@
 const express = require("express");
 const Category = require("../Modelss/Category");
 const router = express.Router();
+const multer = require("multer");
+
+const categorystorage = multer.diskStorage({
+  destination: (req, file, callBack) => {
+    if (file.fieldname === "icon") {
+      // if uploading thumbnail
+      callBack(null, "./uploads/categoryIcons");
+    } else if (file.fieldname === "img") {
+      // else uploading picture
+      callBack(null, "./uploads/categoryImages");
+    }
+  },
+  filename: (req, file, callBack) => {
+    if (!req.body.picture) req.body.picture = [];
+    const fileName = Date.now() + file.originalname;
+    if (file.fieldname === "icon") {
+      req.body.icon = "uploads/categoryIcons/" + fileName;
+    } else {
+      req.body.img = "uploads/categoryImages/" + fileName;
+    }
+    callBack(null, fileName);
+  },
+});
+
+const uploadCategory = multer({ storage: categorystorage });
 
 router.get("/get-categories", (req, res) => {
   try {
@@ -16,20 +41,36 @@ router.get("/get-categories", (req, res) => {
   }
 });
 
-router.post("/category/create", async (req, res) => {
-  const category = await new Category(req.body);
-  try {
-    category.save().then((response) => {
-      res.json({
-        Msg: `Category Saved Sucessfully`,
-        success: true,
-        result: response,
-      });
+router.post(
+  "/category/create",
+  uploadCategory.fields([{ name: "icon" }, { name: "img" }]),
+  async (req, res) => {
+    const { name, description, icon, img } = req.body;
+    const category = await new Category({
+      name: name ? name : "asd",
+      description: req.body.description,
+      icon:
+        req.body.icon === "undefined"
+          ? "uploads/categoryIcons/default.ico"
+          : req.body.icon,
+      img:
+        req.body.icon === "undefined"
+          ? "uploads/categoryImages/default.png"
+          : req.body.img,
     });
-  } catch (error) {
-    res.status(500).json(error);
+    try {
+      category.save().then((response) => {
+        res.json({
+          Msg: `Category Saved Sucessfully`,
+          success: true,
+          result: response,
+        });
+      });
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
-});
+);
 
 router.get("/category/:id", (req, res) => {
   try {
@@ -44,18 +85,32 @@ router.get("/category/:id", (req, res) => {
   }
 });
 
-router.put("/category/:id/update", (req, res) => {
-  try {
-    Category.findByIdAndUpdate(req.params.id, req.body).then((response) => {
-      res.status(200).json({
-        success: true,
-        result: response,
+router.put(
+  "/category/:id/update",
+  uploadCategory.fields([{ name: "icon" }, { name: "img" }]),
+  (req, res) => {
+    try {
+      var category = {
+        name: req.body.name,
+        description: req.body.description,
+      };
+      if (req.body.icon && req.body.icon !== "undefined") {
+        category.icon = req.body.icon;
+      }
+      if (req.body.img && req.body.img !== "undefined") {
+        category.img = req.body.img;
+      }
+      Category.findByIdAndUpdate(req.params.id, category).then((response) => {
+        res.status(200).json({
+          success: true,
+          result: response,
+        });
       });
-    });
-  } catch (error) {
-    res.status(500).json(error);
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
-});
+);
 
 router.delete("/delete/category/:id", (req, res) => {
   Category.findByIdAndDelete(req.params.id, (err) => {

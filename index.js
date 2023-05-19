@@ -7,9 +7,11 @@ const router = require("./routes");
 const cors = require("cors");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
-// const path = require("path");
+const morgan = require("morgan");
 
 const app = express();
+
+app.use(morgan("dev"));
 
 mongoose.set("strictQuery", false);
 
@@ -20,10 +22,7 @@ const MONGODB_URI =
 // middleware
 app.use(express.json());
 const corsOptions = {
-  origin: [
-    "http://localhost:3000",
-    "https://real-estate-frontend-u4cg.onrender.com",
-  ], // frontend URI (ReactJS)
+  origin: ["http://localhost:3000", process.env.REACT_APP_CLIENT_URL], // frontend URI (ReactJS)
 };
 app.use(cors(corsOptions));
 
@@ -44,12 +43,9 @@ app.use(
 );
 
 app.use(express.static(__dirname));
-// app.get("/*", function (req, res) {
-//   res.sendFile(path.join(__dirname, "build/index.html"), function (err) {
-//     if (err) {
-//       res.status(500).send(err);
-//     }
-//   });
+
+// app.get("/", function (req, res) {
+//   res.sendfile("./build/index.html");
 // });
 
 app.use("/", router);
@@ -61,7 +57,7 @@ const server = app.listen(PORT, () => {
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "https://real-estate-frontend-u4cg.onrender.com",
+    origin: ["http://localhost:3000", process.env.REACT_APP_CLIENT_URL], // frontend URI (ReactJS)
   },
 });
 

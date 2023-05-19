@@ -2,16 +2,11 @@ const mongoose = require("mongoose");
 
 const CurrencySchema = mongoose.Schema(
   {
-    name: { type: String, require: true },
+    name: { type: String },
     symbol: {
       type: String,
-      require: true,
     },
-    code: { type: String, require: true },
-    created: {
-      type: Date,
-      default: Date.now,
-    },
+    code: { type: String },
   },
   {
     timestamps: true,
