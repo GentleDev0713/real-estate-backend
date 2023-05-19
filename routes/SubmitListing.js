@@ -164,7 +164,7 @@ router.get("/lastsubmit", async (req, res) => {
 router.get("/get-properties", async (req, res) => {
   try {
     SubmitListing.find({})
-      .populate(["Author"])
+      .populate(["Author", "Features", "Details.near.type"])
       .then((response) => {
         res.status(200).json({
           success: true,
