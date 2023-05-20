@@ -8,6 +8,7 @@ const cors = require("cors");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 const morgan = require("morgan");
+const path = require("path");
 
 const app = express();
 
@@ -44,7 +45,7 @@ app.use(
 
 app.use(express.static(__dirname));
 app.get("/", function (req, res) {
-  res.sendFile("./index.js");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 app.use("/", router);
