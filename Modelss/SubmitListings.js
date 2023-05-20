@@ -50,23 +50,7 @@ const SubmitSchema = new mongoose.Schema(
       parking: { type: String },
       lotsize: { type: String },
       view: { type: String },
-      near: [
-        {
-          type: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "neartypes",
-          },
-          name: {
-            type: String,
-          },
-          distance: {
-            type: String,
-          },
-          isEdit: {
-            type: Boolean,
-          },
-        },
-      ],
+      near: [{ type: mongoose.Schema.Types.ObjectId, ref: "nears" }],
     },
     category: { type: String },
     Author: {

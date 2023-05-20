@@ -68,6 +68,7 @@ router.post(
       category,
       authorId,
     } = req.body;
+
     const newListing = new SubmitListing({
       BasicInformation: {
         description: description,
@@ -108,7 +109,7 @@ router.post(
         parking: parking,
         lotsize: lotsize,
         view: view,
-        near: near,
+        near: near ? near.split(",") : [],
       },
       category: category,
       Author: authorId,
@@ -164,7 +165,7 @@ router.get("/lastsubmit", async (req, res) => {
 router.get("/get-properties", async (req, res) => {
   try {
     SubmitListing.find({})
-      .populate(["Author", "Features", "Details.near.type"])
+      .populate(["Author", "Features", "Details.near"])
       .then((response) => {
         res.status(200).json({
           success: true,

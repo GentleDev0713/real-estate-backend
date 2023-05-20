@@ -12,6 +12,7 @@ const adminCurrency = require("./adminCurrency");
 const adminFeature = require("./adminFeature");
 const adminLocation = require("./adminLocation");
 const adminNearbytype = require("./adminNearbytype");
+const adminNear = require("./adminNear");
 const getListing = require("./getListing");
 
 router.use("/submitlisting", submitListingRouter);
@@ -25,6 +26,7 @@ router.use("/admin", adminCurrency);
 router.use("/admin", adminFeature);
 router.use("/admin", adminLocation);
 router.use("/admin", adminNearbytype);
+router.use("/admin", adminNear);
 router.use("/", getListing);
 
 module.exports = router;

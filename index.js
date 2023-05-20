@@ -44,9 +44,9 @@ app.use(
 
 app.use(express.static(__dirname));
 
-// app.get("/", function (req, res) {
-//   res.sendfile("./build/index.html");
-// });
+app.get("/", function (req, res) {
+  res.sendfile("./build/index.html");
+});
 
 app.use("/", router);
 
