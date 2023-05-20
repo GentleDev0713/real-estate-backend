@@ -43,9 +43,14 @@ app.use(
   })
 );
 
-// app.use(express.static("public"));
-app.get("/", function (req, res) {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+app.use(
+  express.static(path.resolve(__dirname, "real-estate-frontend", "build"))
+);
+
+app.get("/", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "real-estate-frontend", "build", "index.html")
+  );
 });
 
 app.use("/", router);
