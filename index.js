@@ -43,10 +43,10 @@ app.use(
   })
 );
 
-app.use(express.static(path.resolve(__dirname, "build")));
+app.use(express.static(path.resolve(__dirname)));
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 app.use("/", router);
