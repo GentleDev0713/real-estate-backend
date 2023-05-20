@@ -24,8 +24,7 @@ const MONGODB_URI =
 app.use(express.static(__dirname));
 app.use(express.json());
 const corsOptions = {
-  origin: ["http://localhost:3000", process.env.REACT_APP_CLIENT_URL],
-  optionsSuccessStatus: 200, // frontend URI (ReactJS)
+  origin: [process.env.REACT_APP_CLIENT_URL, "http://localhost:3000"],
 };
 app.use(cors(corsOptions));
 
