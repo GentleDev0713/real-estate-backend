@@ -5,10 +5,10 @@ require("dotenv").config();
 
 const router = require("./routes");
 const cors = require("cors");
-const passport = require("passport");
-const cookieSession = require("cookie-session");
-const morgan = require("morgan");
-const path = require("path");
+// const passport = require("passport");
+// const cookieSession = require("cookie-session");
+// const morgan = require("morgan");
+// const path = require("path");
 
 const app = express();
 
@@ -21,9 +21,11 @@ const MONGODB_URI =
   process.env.MONGODB_URI || "mongodb://127.0.0.1/buyhomeforless";
 
 // middleware
+app.use(express.static(__dirname));
 app.use(express.json());
 const corsOptions = {
-  origin: ["http://localhost:3000", process.env.REACT_APP_CLIENT_URL], // frontend URI (ReactJS)
+  origin: ["http://localhost:3000", process.env.REACT_APP_CLIENT_URL],
+  optionsSuccessStatus: 200, // frontend URI (ReactJS)
 };
 app.use(cors(corsOptions));
 
@@ -42,8 +44,6 @@ mongoose
 //     keys: ["buyhomeforless"],
 //   })
 // );
-
-app.use(express.static(__dirname));
 
 // app.get("/*", (req, res) => {
 //   res.sendFile(path.join(__dirname, "index.html"));
