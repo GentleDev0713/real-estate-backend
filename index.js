@@ -36,18 +36,18 @@ mongoose
     console.log(err);
   });
 
-app.use(
-  cookieSession({
-    name: "session",
-    keys: ["buyhomeforless"],
-  })
-);
+// app.use(
+//   cookieSession({
+//     name: "session",
+//     keys: ["buyhomeforless"],
+//   })
+// );
 
-app.use(express.static(path.resolve(__dirname)));
+app.use(express.static(__dirname));
 
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
+// app.get("/*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "index.html"));
+// });
 
 app.use("/", router);
 
