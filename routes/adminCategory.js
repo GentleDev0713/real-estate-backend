@@ -4,13 +4,17 @@ const router = express.Router();
 const multer = require("multer");
 
 const categorystorage = multer.diskStorage({
-  destination: (req, file, callBack) => {
+  destination: (req, file, cb) => {
     if (file.fieldname === "icon") {
-      // if uploading thumbnail
-      callBack(null, "./uploads/categoryIcons");
+      const dir = "./uploads/categoryIcons";
+      fs.exists(dir, (exist) =>
+        !exist ? fs.mkdir(dir, (error) => cb(error, dir)) : cb(null, dir)
+      );
     } else if (file.fieldname === "img") {
-      // else uploading picture
-      callBack(null, "./uploads/categoryImages");
+      const dir = "./uploads/categoryImages";
+      fs.exists(dir, (exist) =>
+        !exist ? fs.mkdir(dir, (error) => cb(error, dir)) : cb(null, dir)
+      );
     }
   },
   filename: (req, file, callBack) => {

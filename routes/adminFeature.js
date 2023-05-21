@@ -5,7 +5,10 @@ const multer = require("multer");
 
 let iconstorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./uploads/features");
+    const dir = "./uploads/features";
+    fs.exists(dir, (exist) =>
+      !exist ? fs.mkdir(dir, (error) => cb(error, dir)) : cb(null, dir)
+    );
   },
   filename: (req, file, cb) => {
     const fileName = Date.now() + file.originalname;

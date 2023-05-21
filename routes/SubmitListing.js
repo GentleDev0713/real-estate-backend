@@ -4,13 +4,17 @@ const SubmitListing = require("../Modelss/SubmitListings");
 const multer = require("multer");
 
 const storage = multer.diskStorage({
-  destination: (req, file, callBack) => {
+  destination: (req, file, cb) => {
     if (file.fieldname === "thumbnail") {
-      // if uploading thumbnail
-      callBack(null, "./uploads/thumbnail");
+      const dir = "./uploads/thumbnail";
+      fs.exists(dir, (exist) =>
+        !exist ? fs.mkdir(dir, (error) => cb(error, dir)) : cb(null, dir)
+      );
     } else if (file.fieldname === "picture") {
-      // else uploading picture
-      callBack(null, "./uploads/picture");
+      const dir = "./uploads/picture";
+      fs.exists(dir, (exist) =>
+        !exist ? fs.mkdir(dir, (error) => cb(error, dir)) : cb(null, dir)
+      );
     }
   },
   filename: (req, file, callBack) => {
