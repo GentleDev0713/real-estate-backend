@@ -2,14 +2,19 @@ const router = require("express").Router();
 const SubmitListing = require("../Modelss/SubmitListings");
 
 const multer = require("multer");
+const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === "thumbnail") {
       const dir = "./uploads/thumbnail";
-      fs.exists(dir, (exist) =>
-        !exist ? fs.mkdir(dir, (error) => cb(error, dir)) : cb(null, dir)
-      );
+      fs.access(dir, (error) => {
+        if (error) {
+          fs.mkdir(dir, (error) => cb(error, dir));
+        } else {
+          cb(null, dir);
+        }
+      });
     } else if (file.fieldname === "picture") {
       const dir = "./uploads/picture";
       fs.exists(dir, (exist) =>

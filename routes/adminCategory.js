@@ -2,14 +2,19 @@ const express = require("express");
 const Category = require("../Modelss/Category");
 const router = express.Router();
 const multer = require("multer");
+const fs = require("fs");
 
 const categorystorage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === "icon") {
       const dir = "./uploads/categoryIcons";
-      fs.exists(dir, (exist) =>
-        !exist ? fs.mkdir(dir, (error) => cb(error, dir)) : cb(null, dir)
-      );
+      fs.access(dir, (error) => {
+        if (error) {
+          fs.mkdir(dir, (error) => cb(error, dir));
+        } else {
+          cb(null, dir);
+        }
+      });
     } else if (file.fieldname === "img") {
       const dir = "./uploads/categoryImages";
       fs.exists(dir, (exist) =>

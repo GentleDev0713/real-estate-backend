@@ -2,13 +2,18 @@ const express = require("express");
 const Feature = require("../Modelss/Feature");
 const router = express.Router();
 const multer = require("multer");
+const fs = require("fs");
 
 let iconstorage = multer.diskStorage({
   destination: (req, file, cb) => {
     const dir = "./uploads/features";
-    fs.exists(dir, (exist) =>
-      !exist ? fs.mkdir(dir, (error) => cb(error, dir)) : cb(null, dir)
-    );
+    fs.access(dir, (error) => {
+      if (error) {
+        fs.mkdir(dir, (error) => cb(error, dir));
+      } else {
+        cb(null, dir);
+      }
+    });
   },
   filename: (req, file, cb) => {
     const fileName = Date.now() + file.originalname;
