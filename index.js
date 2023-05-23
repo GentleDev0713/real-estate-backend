@@ -7,12 +7,12 @@ const router = require("./routes");
 const cors = require("cors");
 // const passport = require("passport");
 // const cookieSession = require("cookie-session");
-// const morgan = require("morgan");
+const morgan = require("morgan");
 // const path = require("path");
 
 const app = express();
 
-// app.use(morgan("dev"));
+app.use(morgan("dev"));
 
 mongoose.set("strictQuery", false);
 

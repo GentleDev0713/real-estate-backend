@@ -58,6 +58,7 @@ router.post(
   "/category/create",
   uploadCategory.fields([{ name: "icon" }, { name: "img" }]),
   async (req, res) => {
+    console.log(req.body, req.files);
     const { name, description, icon, img } = req.body;
     const category = await new Category({
       name: name ? name : "asd",
