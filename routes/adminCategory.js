@@ -17,9 +17,13 @@ const categorystorage = multer.diskStorage({
       });
     } else if (file.fieldname === "img") {
       const dir = "./uploads/categoryImages";
-      fs.exists(dir, (exist) =>
-        !exist ? fs.mkdir(dir, (error) => cb(error, dir)) : cb(null, dir)
-      );
+      fs.access(dir, (error) => {
+        if (error) {
+          fs.mkdir(dir, (error) => cb(error, dir));
+        } else {
+          cb(null, dir);
+        }
+      });
     }
   },
   filename: (req, file, callBack) => {
