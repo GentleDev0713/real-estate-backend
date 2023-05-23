@@ -61,7 +61,7 @@ router.post(
     console.log(req.body, req.files);
     const { name, description, icon, img } = req.body;
     const category = await new Category({
-      name: name ? name : "asd",
+      name: name ? name : "default",
       description: req.body.description,
       icon:
         req.body.icon === "undefined"
